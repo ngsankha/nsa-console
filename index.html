@@ -17,12 +17,12 @@
     <script src="jquery-1.7.1.min.js"></script>
     <script src="jquery.terminal-min.js"></script>
     <script type="text/javascript">
-    var criminals = new Set();
+    var criminals = [];
 
     function lookupPerson(term, name) {
       term.echo("Looking up personal information of " + name + " ...");
       setTimeout(function() {
-        if (criminals.has(name)) {
+        if (criminals.indexOf(name) > -1) {
           term.echo(name + " is suspected to be a terrorist.");
         } else {
           term.echo(name + " is not suspected to be a terrorist.");
@@ -35,7 +35,7 @@
     function setTerrorist(term, name) {
       term.echo("Updating data for " + name + " ...");
       setTimeout(function() {
-        criminals.add(name);
+        criminals.push(name);
         term.echo(name + " has been marked as a terrorist.");
         term.resume();
       }, 2000);
