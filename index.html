@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>NSA - PRISM Access Console</title>
+    <meta name="description" content="NSA - PRISM Access Console">
+    <meta name="keywords" content="NSA, PRISM, access console">
+    <link href="style.css" rel="stylesheet">
+    <link href="jquery.terminal.css" rel="stylesheet">
+  </head>
+  
+  <body>
+    <img id="logo" src="nsa_logo.png">
+
+    <div id="terminal"></div>
+    <script src="jquery-1.7.1.min.js"></script>
+    <script src="jquery.terminal-min.js"></script>
+    <script type="text/javascript">
+    var criminals = new Set();
+
+    function lookupPerson(term, name) {
+      term.echo("Looking up personal information of " + name + " ...");
+      setTimeout(function() {
+        if (criminals.has(name)) {
+          term.echo(name + " is suspected to be a terrorist.");
+        } else {
+          term.echo(name + " is not suspected to be a terrorist.");
+        }
+        term.resume();
+      }, 2000);
+      term.pause();
+    }
+
+    function setTerrorist(term, name) {
+      term.echo("Updating data for " + name + " ...");
+      setTimeout(function() {
+        criminals.add(name);
+        term.echo(name + " has been marked as a terrorist.");
+        term.resume();
+      }, 2000);
+      term.pause();
+    }
+
+    function drone(term, name) {
+      term.echo("Fetching co-ordinates of " + name + " ...");
+      setTimeout(function() {
+        term.echo("Drone target locked onto " + name + ".");
+        term.resume();
+        setTimeout(function() {
+          term.echo("Traget " + name + " eliminated.")
+        }, 5000);
+      }, 2000);
+      term.pause();
+    }
+
+    function documents(term, name) {
+      term.echo("Fetching secret documents of " + name + " ...");
+      setTimeout(function() {
+        term.echo("WARNING: The data maybe encrypted.");
+        var text = "";
+        var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        for( var i=0; i < 500; i++ )
+          text += possible.charAt(Math.floor(Math.random() * possible.length));
+        term.echo(text);
+        term.resume();
+      }, 2000);
+      term.pause();
+    }
+
+    function help(term) {
+      term.echo("List of commands:");
+      term.echo("lookup <person> - Check is <person> is a terrorist.");
+      term.echo("terrorist <person> - Mark <person> as a terrorist.");
+      term.echo("drone <person> - Order a drone strike on <person>.");
+      term.echo("documents <person> - Fetch secret documents associated with <person>.");
+    }
+
+    jQuery(function($, undefined) {
+      $('#terminal').terminal(function(command, term) {
+        if (command !== '') {
+          var tokens = command.split(" ");
+          switch (tokens[0]) {
+            case 'lookup':
+              lookupPerson(term, tokens[1]);
+              break;
+            case 'terrorist':
+              setTerrorist(term, tokens[1]);
+              break;
+            case 'drone':
+              drone(term, tokens[1]);
+              break;
+            case 'documents':
+              documents(term, tokens[1]);
+              break;
+            case 'help':
+              help(term);
+              break;
+            default:
+              term.error("Unknown command. Please type help for a list of valid commands.");
+          }
+        } else {
+          term.echo('');
+        }
+      }, {
+        greetings: 'NSA PRISM Access Console, Copyright (C) 2013 All rights reserved. Type help for commands.',
+        name: 'nsa_console',
+        height: 200,
+        prompt: '> '
+      });
+    });
+    </script>
+  </body>
+</html>
